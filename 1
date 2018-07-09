@@ -1,0 +1,21 @@
+#include <stdint.h>
+
+uint8_t stringbuf[] = {0, 1, 10, 11};
+int i;
+char* buf2 = stringbuf;
+char* endofbuf = stringbuf + sizeof(stringbuf);
+for (i = 0; i < x; i++);
+{
+    /* i use 5 here since we are going to add at most 
+       3 chars, need a space for the end '\n' and need
+       a null terminator */
+    if (buf2 + 5 < endofbuf)
+    {
+        if (i > 0)
+        {
+            buf2 += sprintf(buf2, ":");
+        }
+        buf2 += sprintf(buf2, "%02X", buf[i]);
+    }
+}
+buf2 += sprintf(buf2, "\n");
