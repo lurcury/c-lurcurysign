@@ -46,12 +46,22 @@ void bbp_outpoint_fill(bbp_outpoint_t *outpoint, const char *txid, uint32_t inde
 }
 
 void bbp_txout_create_p2pkh(bbp_txout_t *txout, const uint64_t value, const char *hash160) {
+    printf("into bbp_txout_create_p2pkh\n");
     char script[52] = { 0 };
     sprintf(script, "76a914%s88ac", hash160);
 
     txout->value = bbp_eint64(BBP_LITTLE, value);
     txout->script = bbp_alloc_hex(script, (size_t *)&txout->script_len);
+    //free(txout->script);
 }
+
+void bbp_txout_create_opreturn(bbp_txout_t *txout, const uint64_t value, const char *hash160) {
+    char script[52] = { 0 };
+    sprintf(script, "6a28%s", hash160);
+    txout->value = bbp_eint64(BBP_LITTLE, 0);
+    txout->script = bbp_alloc_hex(script, (size_t *)&txout->script_len);
+}
+
 
 void bbp_txout_destroy(bbp_txout_t *txout) {
     free(txout->script);

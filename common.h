@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include "endian.h"
 
+#include <string.h>
+
 void bbp_print_hex(const char *label, const uint8_t *v, size_t len) {
     size_t i;
 
@@ -14,6 +16,20 @@ void bbp_print_hex(const char *label, const uint8_t *v, size_t len) {
         printf("%02x", v[i]);
     }
     printf("\n");
+}
+
+void bbp_to_hex(char tmp[41],const uint8_t *v, size_t len) {
+    //char tmp[41];
+    size_t i;
+    char re[41];
+    for (i = 0; i < len; ++i) {
+        char b[2];
+        sprintf(b,"%02x", v[i]);
+        strcat(re,b);
+    }
+    memcpy(tmp,re,41);
+    //printf("%s",tmp);
+
 }
 
 uint8_t bbp_hex2byte(const char ch) {
