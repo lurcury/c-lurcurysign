@@ -21,7 +21,7 @@ void bbp_print_hex(const char *label, const uint8_t *v, size_t len) {
 void bbp_to_hex(char tmp[41],const uint8_t *v, size_t len) {
     //char tmp[41];
     size_t i;
-    char re[41];
+    char re[41]="";
     for (i = 0; i < len; ++i) {
         char b[2];
         sprintf(b,"%02x", v[i]);

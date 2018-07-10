@@ -46,7 +46,7 @@ void bbp_outpoint_fill(bbp_outpoint_t *outpoint, const char *txid, uint32_t inde
 }
 
 void bbp_txout_create_p2pkh(bbp_txout_t *txout, const uint64_t value, const char *hash160) {
-    printf("into bbp_txout_create_p2pkh\n");
+//    printf("into bbp_txout_create_p2pkh\n");
     char script[52] = { 0 };
     sprintf(script, "76a914%s88ac", hash160);
 
