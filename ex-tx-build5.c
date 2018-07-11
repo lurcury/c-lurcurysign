@@ -17,13 +17,13 @@ char * bbp_bytesTostring(const uint8_t *msg, size_t msg_len){
     size_t i;
     char ptr[10];
     static char result[10000];
-	strcpy(result, "");
+    strcpy(result, "");
     for (i = 0; i < msg_len; ++i) {
         //printf("%02x", msg[i]);
-	sprintf (ptr, "%02x", msg[i]);
-	strcat(result,ptr);
+    sprintf (ptr, "%02x", msg[i]);
+    strcat(result,ptr);
     }
-	return result;
+    return result;
 }
 
 char * build_t(int op,int in,int out,char * array[][6]) {
@@ -40,28 +40,28 @@ printf("1.top:%s\n",array[2][4]);
     uint8_t *msg;
     size_t msg_len;
 
-	int inint;
-	int outint;
-	int opint;
-	int x = atoi(array[0][1]);
+    int inint;
+    int outint;
+    int opint;
+    int x = atoi(array[0][1]);
 
-	for (inint=0;inint<in;inint++){
+    for (inint=0;inint<in;inint++){
                 int z = atoi(array[inint][3]);
-		bbp_outpoint_fill(&outpoint, array[inint][2], z );
-		int p = atoi(array[inint][1]);
-		bbp_txout_create_p2pkh(&prev_outs[inint], p, array[inint][0]);
-		bbp_txin_create_signable(&ins_sign[inint], &outpoint, &prev_outs[inint]);
+        bbp_outpoint_fill(&outpoint, array[inint][2], z );
+        int p = atoi(array[inint][1]);
+        bbp_txout_create_p2pkh(&prev_outs[inint], p, array[inint][0]);
+        bbp_txin_create_signable(&ins_sign[inint], &outpoint, &prev_outs[inint]);
 
-	}
+    }
 
-	for (outint=0;outint<out;outint++){
-		char b[41];
-	        hash1601(array[outint][4],b);
-		//printf("result:%s\n",b);
-		int p = atoi(array[outint][5]);
-		bbp_txout_create_p2pkh(&outs[outint], p, array[outint][4]);
-		printf("1.top:%s\n",array[outint][4]);
-	}
+    for (outint=0;outint<out;outint++){
+        char b[41];
+            hash1601(array[outint][4],b);
+        //printf("result:%s\n",b);
+        int p = atoi(array[outint][5]);
+        bbp_txout_create_p2pkh(&outs[outint], p, array[outint][4]);
+        printf("1.top:%s\n",array[outint][4]);
+    }
 /*
         for (opint=0;opint<op;opint++){
                 //bbp_txout_create_p2pkh(&outs[outint], atoi(array[outint][5]), array[outint][4]);
@@ -100,17 +100,17 @@ char * pack(char* signContent,int op,int in,int out,char * array[][6], char * pu
 
         int inint;
         int outint;
-	int opint;
+    int opint;
 
         for (inint=0;inint<in;inint++){
-		int z = atoi(array[inint][3]);
+        int z = atoi(array[inint][3]);
                 bbp_outpoint_fill(&outpoint, array[inint][2], z );
-		bbp_txin_create_p2pkh(&ins[inint], &outpoint,signContent,pubkey, BBP_SIGHASH_ALL);
+        bbp_txin_create_p2pkh(&ins[inint], &outpoint,signContent,pubkey, BBP_SIGHASH_ALL);
         }
         for (outint=0;outint<out;outint++){
-		int p = atoi(array[outint][5]);
+        int p = atoi(array[outint][5]);
                 bbp_txout_create_p2pkh(&outs[outint], p, array[outint][4]);
-		//printf("2.top:%s\n",array[outint][4]);
+        //printf("2.top:%s\n",array[outint][4]);
         }
 /*
         for (opint=0;opint<op;opint++){
@@ -175,88 +175,110 @@ char* sign(char* txContent, char* privkey) {
 }
 /*
 struct RawtxStruct{
-	const char in[][];
-	const char out[][];
+    const char in[][];
+    const char out[][];
 };
 */
 
-void main() {
-	int op = 0;
-	int in = 1;
-	int out = 3;
-	char * array[41][6];
-	char * txContent;
-	char * signContent;
-	char * priv = "KxegFjsrQqG849TC5a2KQbu7PFiKaWrP27anuxrQ58nH3DtpBwtm";
-	char * pub = "03397400CF70FD2E6285299A200E0519CBF072ED5185043B8B8FDA872F84D73462";
-	//from, balance, tx, num
-	array[0][0] = "1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR";
-	array[0][1] = "7430";
-	array[0][2] = "b5110aee256c189494653a0e20e28104f60b56bc3816d5b5bc49d56a5bc72dd6";
-	array[0][3] = "2";
-/*
-        array[1][0] = "18ba14b3682295cb05230e31fecb000892406601";
-        array[1][1] = "300000000";
-        array[1][2] = "f34e1c37e736727770fed85d1b129713ef7f300304498c31c833985f487fa2f3";
-        array[1][3] = "1";
-*/
-	// char* outAddress[out][40], char* outBalance[out][40],
-//1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR
-	array[0][4] = "1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR";
-	array[1][4] = "1A1Um9vFzVm3dRgCdeZodH43dhMM1L1jP5";
-	array[2][4] = "18U8TbSjyMmBgqxZKBW6uiq1X1R6aieR4P";
-	array[0][5] = "546";
-	array[1][5] = "100000000";
-	array[2][5] = "100000000";
-	//char* cicAddress[opreturn]
-	array[0][6] = "40aafe9b86f2240b89bf8a6a096ea4556f2e97bf";
-	//op,in,out
+#define SOURCE_ROW 3
+#define SOURCE_COL 7
+#define ARRAY_ROW 41
+#define ARRAY_COL 7
 
-	int t;
-        for(t=0;t<out;t++){
-                char x[41];
-		char *y;
-		//memset(x, 0, sizeof(x));
-                hash1601(array[t][4],x);
-		printf("%itest%p",t, x);
-		printf("hago:%s\n",x);
-                //memcpy(y/*array[t][4]*/ , x, 40);
-		memcpy(array[t][4], x, sizeof(x));
-		//array[t][4] = y;
-		printf("go:%s\n",array[t][4]);
-                printf("go:%s\n",array[0][4]);
+void main() {
+    int op = 0;
+    int in = 1;
+    int out = 3;
+
+    char * source[SOURCE_ROW][SOURCE_COL] = {
+        {"1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR","7430","b5110aee256c189494653a0e20e28104f60b56bc3816d5b5bc49d56a5bc72dd6","2","1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR","546","40aafe9b86f2240b89bf8a6a096ea4556f2e97bf"},
+        {"18ba14b3682295cb05230e31fecb000892406601","300000000","f34e1c37e736727770fed85d1b129713ef7f300304498c31c833985f487fa2f3","1","1A1Um9vFzVm3dRgCdeZodH43dhMM1L1jP5","100000000",""},
+        {"","","","1","18U8TbSjyMmBgqxZKBW6uiq1X1R6aieR4P","100000000",""}
+    };
+
+    char * array[ARRAY_ROW][ARRAY_COL];
+    char * txContent;
+    char * signContent;
+    char * priv = "KxegFjsrQqG849TC5a2KQbu7PFiKaWrP27anuxrQ58nH3DtpBwtm";
+    char * pub = "03397400CF70FD2E6285299A200E0519CBF072ED5185043B8B8FDA872F84D73462";
+    //from, balance, tx, num
+
+    //init array
+    memset(array, 0, sizeof(array));
+
+    for(int i=0; i<SOURCE_ROW; i++)
+        for(int j=0; j<SOURCE_COL; j++)
+        {
+            array[i][j] = (char*)malloc(sizeof(char) * strlen(source[i][j]));
+            memcpy(array[i][j], source[i][j], strlen(source[i][j]));
         }
 
-                printf("array[0][4]:%s\n",array[0][4]);
-	txContent = build_t(op,in,out,array);
-	printf("%s\n",build_t(op,in,out,array));
+    for(int t=0;t<out;t++)
+    {
+        char x[41];
+        //memset(x, 0, sizeof(x));
+        hash1601(array[t][4],x);
+        printf("%itest%p",t, x);
+        printf("hago:%s\n",x);
 
-	signContent = sign(txContent,priv);
-	pack(signContent,op,in,out,array,pub);
+        if(sizeof(x) > strlen(array[t][4]))
+        {
+            printf("hello %ld %zu %s\n", sizeof(x), strlen(array[t][4]), array[t][4]);
 
+            char *new_array_element = (char*)realloc(array[t][4], sizeof(x) * sizeof(char));
+            if(new_array_element != NULL)
+            {
+                array[t][4] = new_array_element;
+                memcpy(array[t][4], x, sizeof(x));
+            }
+            else
+            {
+                puts("Error (re)allocating memory");
+                exit(1);
+            }
+        }
+
+        printf("go:%s\n",array[t][4]);
+    }
+
+    //release array memory
+    for(int i=0; i<ARRAY_ROW; i++)
+        for(int j=0; j<ARRAY_COL; j++)
+        {
+            if(array[i][j] != NULL)
+                free(array[i][j]);
+        }
 /*
+    printf("array[0][4]:%s\n",array[0][4]);
+    txContent = build_t(op,in,out,array);
+    printf("%s\n",build_t(op,in,out,array));
 
-	char x[41];
-	hash160("1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR",x);
-        printf("%s",x);
+    signContent = sign(txContent,priv);
+    pack(signContent,op,in,out,array,pub);
+*/
+    /*
 
-        char e[41];
-        hash160("1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR",e);
-        printf("%s",e);
-*/
-/*
-	uint8_t address_bytes[21];
-	address_bytes[0] = 0x00;
-	bbp_hash160(address_bytes + 1, "1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR", 33);
-	bbp_print_hex("hash160", address_bytes + 1, 20);
-	char x[41] ;
-	bbp_to_hex(x,address_bytes + 1, 20);
-*/
-//	printf("%s",x);
-/*
-	char *address;
-	address = bbp_base58check(address_bytes, 21);
-	printf("address      : %s\n", address);
-*/
+       char x[41];
+       hash160("1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR",x);
+       printf("%s",x);
+
+       char e[41];
+       hash160("1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR",e);
+       printf("%s",e);
+       */
+    /*
+       uint8_t address_bytes[21];
+       address_bytes[0] = 0x00;
+       bbp_hash160(address_bytes + 1, "1Pi1Spap6vdfAWJPfMkYUCtG4EYM5fPWeR", 33);
+       bbp_print_hex("hash160", address_bytes + 1, 20);
+       char x[41] ;
+       bbp_to_hex(x,address_bytes + 1, 20);
+       */
+    //  printf("%s",x);
+    /*
+       char *address;
+       address = bbp_base58check(address_bytes, 21);
+       printf("address      : %s\n", address);
+       */
 }
 
